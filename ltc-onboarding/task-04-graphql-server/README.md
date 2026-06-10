@@ -13,7 +13,6 @@ task-04-graphql-server/
 ```
 
 ## How to run the server
-
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or later recommended)
@@ -47,7 +46,6 @@ Server ready at port 4000
 The GraphQL endpoint is available at **http://localhost:4000**.
 
 ## How to use the server
-
 ### Apollo Sandbox (recommended)
 
 1. Start the server.
@@ -204,20 +202,6 @@ mutation AddGame($input: AddGameInput!) {
 }
 ```
 
----
-
-## Learning goals
-
-After working through this task, you should be able to:
-
-- Explain what GraphQL is
-- Understand the difference between GraphQL and REST
-- Write basic GraphQL queries and mutations
-- Understand schemas, types, and resolvers
-- Fetch and manipulate data using GraphQL
-
----
-
 ## Theory
 
 ### What GraphQL is
@@ -259,29 +243,6 @@ REST uses multiple endpoints with fixed response shapes. GraphQL uses one endpoi
 ### Basic error handling
 
 GraphQL responses include `data` and optionally `errors`. Invalid queries (wrong field names, bad types) fail with error messages before running. Missing records may return `null` in data without a top-level error. Check both `data` and `errors` when debugging.
-
----
-
-## Quick reference — available operations
-
-### Queries
-
-| Field | Arguments | Returns |
-|-------|-----------|---------|
-| `games` | — | `[Game]` |
-| `game` | `id: ID!` | `Game` |
-| `reviews` | — | `[Review]` |
-| `review` | `id: ID!` | `Review` |
-| `authors` | — | `[Author]` |
-| `author` | `id: ID!` | `Author` |
-
-### Mutations
-
-| Field | Arguments | Returns |
-|-------|-----------|---------|
-| `addGame` | `game: AddGameInput!` | `Game` |
-| `updateGame` | `id: ID!`, `edits: EditGameInput!` | `Game` |
-| `deleteGame` | `id: ID!` | `[Game]` |
 
 ---
 
