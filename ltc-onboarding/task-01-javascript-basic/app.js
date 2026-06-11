@@ -191,11 +191,7 @@ const createExpenseElement = (expense) => {
       highestExpense.textContent = "—";
     }
   
-    if (isOverBudget(total)) {
-      totalAmount.style.color = "#b91c1c";
-    } else {
-      totalAmount.style.color = "";
-    }
+    totalAmount.classList.toggle("over-budget", isOverBudget(total));
   };
   
   const updateFilterButtons = () => {

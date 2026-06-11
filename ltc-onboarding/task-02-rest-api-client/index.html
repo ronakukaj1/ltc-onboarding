@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Finder — API Client</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app task-books">
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="container">
+      <header class="page-header">
+        <p class="eyebrow">Task 02 · REST APIs</p>
+        <h1>Book Finder</h1>
+        <p class="subtitle">
+          Search Open Library · Practice GET, POST, PUT & DELETE
+        </p>
+      </header>
+
+      <section class="panel terminal-panel" aria-label="Last API request">
+        <div class="panel-title-row">
+          <h2 class="panel-title">Last request</h2>
+          <span class="live-dot" aria-hidden="true"></span>
+        </div>
+        <dl class="request-details">
+          <div>
+            <dt>Method</dt>
+            <dd><code id="request-method">—</code></dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd><code id="request-status">—</code></dd>
+          </div>
+          <div class="request-url">
+            <dt>URL</dt>
+            <dd><code id="request-url">—</code></dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Search books</h2>
+        <form id="search-form" class="search-form">
+          <div class="field search-field">
+            <label for="search-query">Title or author</label>
+            <input
+              type="search"
+              id="search-query"
+              name="query"
+              placeholder="e.g. Dune, Tolkien"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary" id="search-btn">
+            Search
+          </button>
+        </form>
+        <p id="search-error" class="error" hidden></p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">Results</h2>
+        <p id="search-loading" class="status-message" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          Searching Open Library…
+        </p>
+        <p id="search-empty" class="empty-state" hidden>
+          No books found. Try another search.
+        </p>
+        <p id="search-idle" class="empty-state">
+          Enter a title or author above to search Open Library.
+        </p>
+        <ul id="search-results" class="book-list"></ul>
+      </section>
+
+      <section class="panel">
+        <div class="list-header">
+          <h2 class="panel-title">My reading list</h2>
+          <span id="list-count" class="badge">0 books</span>
+        </div>
+        <p id="list-error" class="error" hidden></p>
+        <p id="list-empty" class="empty-state">
+          No saved books yet. Add one from the search results.
+        </p>
+        <ul id="reading-list" class="book-list reading-list"></ul>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

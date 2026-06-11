@@ -1,17 +1,4 @@
 # Task 03 — GitHub & Version Control
-
-An introduction to **GitHub** and the fundamentals of **version control** — how developers track changes, organize projects, and collaborate on code.
-
-## Learning objectives
-
-After completing the video and this material, you should be able to:
-
-- Explain what GitHub is
-- Understand the basics of version control
-- Create and manage repositories
-- Upload, edit, and organize project files
-- Collaborate with others using GitHub tools
-
 ## Project structure
 
 ```
@@ -21,10 +8,7 @@ task-03-github/
 
 This task is theory-focused. Practice by creating a repository on GitHub and working through the concepts below.
 
----
-
 ## Theory
-
 ### Introduction to GitHub
 
 **GitHub** is a web-based platform for hosting and collaborating on software projects. It is built on top of **Git**, a distributed version control system that tracks changes to files over time.
@@ -126,29 +110,6 @@ Naming note: you are asking others to *pull* your changes into their branch. On 
 
 A good PR is focused (one feature or fix), has a clear description, and links to related issues when applicable.
 
-### Issues and collaboration
-
-**Issues** are GitHub's task tracker. Use them to:
-
-- Report bugs
-- Request features
-- Ask questions
-- Plan work
-
-Each issue can have labels (e.g. `bug`, `enhancement`), assignees, milestones, and comments.
-
-Collaboration tools on GitHub include:
-
-| Tool | Purpose |
-|------|---------|
-| **Issues** | Track bugs, tasks, and ideas |
-| **Pull requests** | Review and merge code changes |
-| **Discussions** | Longer conversations and Q&A |
-| **Projects** | Kanban-style boards linked to issues/PRs |
-| **Wiki** | Optional documentation pages |
-| **Collaborators** | People with read or write access to a repo |
-
-Mention people with `@username` in issues and PRs to notify them.
 
 ### Cloning repositories
 

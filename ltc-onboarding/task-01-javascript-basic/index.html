@@ -4,34 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body class="app task-expense">
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
     <main class="container">
-      <header>
+      <header class="page-header">
+        <p class="eyebrow">Task 01 · JavaScript</p>
         <h1>Expense Tracker</h1>
         <p class="subtitle">Track spending by category</p>
       </header>
 
       <section class="summary" aria-label="Summary">
-        <div class="summary-card">
+        <div class="summary-card summary-card--total">
+          <span class="summary-icon" aria-hidden="true">$</span>
           <span class="label">Total spent</span>
           <span id="total-amount" class="value">$0.00</span>
         </div>
-        <div class="summary-card">
+        <div class="summary-card summary-card--count">
+          <span class="summary-icon" aria-hidden="true">#</span>
           <span class="label">Expenses</span>
           <span id="expense-count" class="value">0</span>
         </div>
-        <div class="summary-card">
+        <div class="summary-card summary-card--high">
+          <span class="summary-icon" aria-hidden="true">↑</span>
           <span class="label">Highest</span>
           <span id="highest-expense" class="value">—</span>
         </div>
       </section>
 
       <section class="panel">
-        <h2>Add expense</h2>
-        <form id="expense-form">
-          <div class="field">
+        <h2 class="panel-title">Add expense</h2>
+        <form id="expense-form" class="form-grid">
+          <div class="field field--wide">
             <label for="description">Description</label>
             <input
               type="text"
@@ -61,14 +74,14 @@
               <option value="other">Other</option>
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">Add expense</button>
+          <button type="submit" class="btn btn-primary field--wide">Add expense</button>
         </form>
         <p id="form-error" class="error" hidden></p>
       </section>
 
       <section class="panel">
         <div class="list-header">
-          <h2>Expenses</h2>
+          <h2 class="panel-title">Expenses</h2>
           <div class="actions">
             <div class="filters" role="group" aria-label="Filter by category">
               <button type="button" class="btn filter-btn active" data-filter="all">
