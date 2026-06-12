@@ -1,6 +1,5 @@
 const OPEN_LIBRARY_SEARCH = "https://openlibrary.org/search.json";
-const JSON_PLACEHOLDER = "https://jsonplaceholder.typicode.com/posts";
-const STORAGE_KEY = "readingList";
+const API_BASE = "http://localhost:3000/api/books";
 
 const searchForm = document.getElementById("search-form");
 const searchQuery = document.getElementById("search-query");
@@ -20,20 +19,7 @@ const requestMethod = document.getElementById("request-method");
 const requestStatus = document.getElementById("request-status");
 const requestUrl = document.getElementById("request-url");
 
-let readingList = loadReadingList();
-
-function loadReadingList() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveReadingList() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(readingList));
-}
+let readingList = [];
 
 function updateRequestPanel(method, url, status) {
   requestMethod.textContent = method;
@@ -74,8 +60,23 @@ function formatYear(year) {
   return year ? ` · ${year}` : "";
 }
 
-function createCoverElement(coverId, title) {
-  const coverUrl = getCoverUrl(coverId);
+function normalizeApiBook(book) {
+  const coverId = book.coverId ?? null;
+  return {
+    id: book.id,
+    key: book.key,
+    title: book.title,
+    authors: book.authors || [],
+    year: book.year,
+    coverId,
+    coverUrl: book.coverUrl || getCoverUrl(coverId),
+    note: book.note || "",
+  };
+}
+
+function createCoverElement(book) {
+  const coverUrl = book.coverUrl || getCoverUrl(book.coverId);
+  const title = book.title;
 
   if (coverUrl) {
     const img = document.createElement("img");
@@ -116,6 +117,21 @@ async function apiRequest(url, options = {}) {
   return response.json();
 }
 
+async function loadReadingList() {
+  hideError(listError);
+
+  try {
+    const books = await apiRequest(API_BASE);
+    readingList = books.map(normalizeApiBook);
+  } catch (error) {
+    readingList = [];
+    showError(
+      listError,
+      `Could not load reading list. Start the Task 05 server with npm run dev. (${error.message})`
+    );
+  }
+}
+
 async function searchBooks(query) {
   const url = `${OPEN_LIBRARY_SEARCH}?q=${encodeURIComponent(query)}&limit=10`;
   const data = await apiRequest(url);
@@ -123,12 +139,14 @@ async function searchBooks(query) {
 }
 
 function normalizeBook(doc) {
+  const coverId = doc.cover_i ?? null;
   return {
     key: doc.key,
     title: doc.title || "Untitled",
     authors: doc.author_name || [],
     year: doc.first_publish_year || null,
-    coverId: doc.cover_i || null,
+    coverId,
+    coverUrl: getCoverUrl(coverId),
   };
 }
 
@@ -168,7 +186,7 @@ function renderSearchResults(books) {
     saveBtn.addEventListener("click", () => addBookToList(book, saveBtn));
 
     actions.append(saveBtn);
-    li.append(createCoverElement(book.coverId, book.title), info, actions);
+    li.append(createCoverElement(book), info, actions);
     searchResults.append(li);
   });
 }
@@ -199,11 +217,33 @@ function renderReadingList() {
 
     const noteInput = document.createElement("input");
     noteInput.type = "text";
-    noteInput.placeholder = "Add a note (PUT request)";
+    noteInput.placeholder = "Add a note — press Enter or click away to save";
     noteInput.value = book.note || "";
-    noteInput.addEventListener("change", () => updateBookNote(book.id, noteInput.value));
 
-    noteField.append(noteInput);
+    const noteStatus = document.createElement("span");
+    noteStatus.className = "note-status";
+    noteStatus.hidden = true;
+
+    let savedNote = book.note || "";
+
+    function saveNote() {
+      const value = noteInput.value;
+      if (value === savedNote) return;
+      updateBookNote(book.id, value, noteStatus).then((ok) => {
+        if (ok) savedNote = value;
+      });
+    }
+
+    noteInput.addEventListener("blur", saveNote);
+    noteInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        saveNote();
+        noteInput.blur();
+      }
+    });
+
+    noteField.append(noteInput, noteStatus);
     info.append(title, meta, noteField);
 
     const actions = document.createElement("div");
@@ -216,7 +256,7 @@ function renderReadingList() {
     removeBtn.addEventListener("click", () => removeBookFromList(book.id));
 
     actions.append(removeBtn);
-    li.append(createCoverElement(book.coverId, book.title), info, actions);
+    li.append(createCoverElement(book), info, actions);
     readingListEl.append(li);
   });
 }
@@ -227,60 +267,74 @@ async function addBookToList(book, button) {
   button.textContent = "Saving…";
 
   try {
-    const body = {
-      title: book.title,
-      body: formatAuthors(book.authors),
-      userId: 1,
-    };
-
-    const response = await apiRequest(JSON_PLACEHOLDER, {
+    const response = await apiRequest(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        title: book.title,
+        authors: book.authors,
+        year: book.year,
+        coverId: book.coverId,
+        key: book.key,
+        note: "",
+      }),
     });
 
-    readingList.push({
-      id: response.id,
-      key: book.key,
-      title: book.title,
-      authors: book.authors,
-      year: book.year,
-      coverId: book.coverId,
-      note: "",
-    });
-
-    saveReadingList();
+    readingList.push(normalizeApiBook(response));
     renderReadingList();
     button.textContent = "Saved";
   } catch (error) {
     button.disabled = false;
     button.textContent = "Add to list";
+
+    if (error.message.includes("409")) {
+      await loadReadingList();
+      renderReadingList();
+      button.textContent = "Saved";
+      button.disabled = true;
+      return;
+    }
+
     showError(listError, `Could not save book: ${error.message}`);
   }
 }
 
-async function updateBookNote(id, note) {
+async function updateBookNote(id, note, statusEl) {
   hideError(listError);
 
-  const book = readingList.find((item) => item.id === id);
-  if (!book) return;
+  const book = readingList.find((item) => String(item.id) === String(id));
+  if (!book) return false;
+
+  if (statusEl) {
+    statusEl.hidden = true;
+    statusEl.textContent = "";
+    statusEl.className = "note-status";
+  }
 
   try {
-    await apiRequest(`${JSON_PLACEHOLDER}/${id}`, {
+    const response = await apiRequest(`${API_BASE}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id,
-        title: book.title,
-        body: note,
-        userId: 1,
-      }),
+      body: JSON.stringify({ note }),
     });
 
-    book.note = note;
-    saveReadingList();
+    book.note = response.note ?? note;
+
+    if (statusEl) {
+      statusEl.textContent = "Saved";
+      statusEl.className = "note-status note-status--ok";
+      statusEl.hidden = false;
+    }
+
+    return true;
   } catch (error) {
+    if (statusEl) {
+      statusEl.textContent = "Save failed";
+      statusEl.className = "note-status note-status--error";
+      statusEl.hidden = false;
+    }
     showError(listError, `Could not update note: ${error.message}`);
+    return false;
   }
 }
 
@@ -288,22 +342,23 @@ async function removeBookFromList(id) {
   hideError(listError);
 
   try {
-    await apiRequest(`${JSON_PLACEHOLDER}/${id}`, { method: "DELETE" });
+    await apiRequest(`${API_BASE}/${id}`, { method: "DELETE" });
 
+    const removed = readingList.find((book) => book.id === id);
     readingList = readingList.filter((book) => book.id !== id);
-    saveReadingList();
     renderReadingList();
 
-    const saveButtons = searchResults.querySelectorAll(".btn-primary");
-    saveButtons.forEach((btn) => {
-      const item = btn.closest(".book-item");
-      const title = item?.querySelector(".book-title")?.textContent;
-      const removed = readingList.find((book) => book.title === title);
-      if (!removed) {
-        btn.disabled = false;
-        btn.textContent = "Add to list";
-      }
-    });
+    if (removed?.key) {
+      const saveButtons = searchResults.querySelectorAll(".btn-primary");
+      saveButtons.forEach((btn) => {
+        const item = btn.closest(".book-item");
+        const title = item?.querySelector(".book-title")?.textContent;
+        if (title === removed.title) {
+          btn.disabled = false;
+          btn.textContent = "Add to list";
+        }
+      });
+    }
   } catch (error) {
     showError(listError, `Could not remove book: ${error.message}`);
   }
@@ -340,4 +395,4 @@ searchForm.addEventListener("submit", async (event) => {
   }
 });
 
-renderReadingList();
+loadReadingList().then(() => renderReadingList());

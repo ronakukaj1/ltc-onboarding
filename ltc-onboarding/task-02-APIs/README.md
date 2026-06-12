@@ -1,11 +1,11 @@
 # Task 02 — REST API Client
 
-A small **book finder** built with plain HTML, CSS, and JavaScript. It searches real books via the **Open Library API** (GET) and practices create/update/delete requests with **JSONPlaceholder** (POST, PUT, DELETE).
+A small **book finder** built with plain HTML, CSS, and JavaScript. It searches real books via the **Open Library API** (GET) and saves your reading list to the **Task 05 Express API** on your machine (POST, PUT, DELETE).
 
 ## Project structure
 
 ```
-task-02-rest-api-client/
+task-02-APIs/
 ├── index.html   # Page structure
 ├── style.css    # Layout and styling
 ├── app.js       # fetch(), error handling, API calls
@@ -14,20 +14,25 @@ task-02-rest-api-client/
 
 ## How to run
 
-No install or build step required.
+1. Start the **Task 05** server (from `../task-05-nodejs`):
 
-1. Open `index.html` in a browser (double-click the file, or use Live Server in your editor).
-2. Search for a book, add it to your reading list, edit a note, and remove items.
-3. Watch the **Last request** panel to see the HTTP method, status code, and URL.
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+2. Open `index.html` in a browser (double-click the file, or use Live Server in your editor).
+3. Search for a book, add it to your reading list, edit a note, and remove items.
+4. Watch the **Last request** panel to see the HTTP method, status code, and URL.
+
+The reading list is stored on your local Express server — refresh the page and your books are still there (as long as the server is running).
 
 ## APIs used
 
 | API | Purpose | Methods |
 |-----|---------|---------|
 | [Open Library](https://openlibrary.org/developers/api) | Search real books | GET |
-| [JSONPlaceholder](https://jsonplaceholder.typicode.com/) | Practice saving favorites | POST, PUT, DELETE |
-
-JSONPlaceholder is a **fake** REST API — it returns success responses but does not persist data. This app stores your reading list in `localStorage` so the UI still works between page reloads.
+| Task 05 — `http://localhost:3000/api/books` | Your reading list | GET, POST, PUT, DELETE |
 
 ## Features
 
@@ -134,25 +139,6 @@ Example JSON response (simplified):
 | 500 | Server Error | Something failed on the server |
 
 In `app.js`, `response.ok` is `true` for status 200–299. Other codes throw an error so the UI can show a message.
-
-### Making API requests in JavaScript
-
-The **`fetch()`** API sends HTTP requests and returns a Promise:
-
-```javascript
-const response = await fetch(url);
-const data = await response.json();
-```
-
-For POST/PUT, send a JSON body:
-
-```javascript
-await fetch(url, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ title: "Dune", userId: 1 }),
-});
-```
 
 ### Error handling
 
