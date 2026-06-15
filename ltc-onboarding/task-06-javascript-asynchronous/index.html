@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer - Async JavaScript</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app task-countdown">
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="container">
+      <header class="page-header">
+        <p class="eyebrow">Task 06 · Async JavaScript</p>
+        <h1>Countdown Timer</h1>
+        <p class="subtitle">
+          Callbacks, Promises, async/await, and the event loop — in one mini project
+        </p>
+      </header>
+
+      <div class="layout">
+        <section class="panel timer-panel" aria-label="Countdown timer">
+          <div class="timer-ring" id="timer-ring" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <circle class="timer-ring__track" cx="60" cy="60" r="54" />
+              <circle class="timer-ring__progress" id="timer-progress" cx="60" cy="60" r="54" />
+            </svg>
+          </div>
+
+          <p class="timer-display" id="timer-display" aria-live="polite">00:00</p>
+          <p class="timer-status" id="timer-status">Set a duration and press Start</p>
+
+          <form id="timer-form" class="timer-form">
+            <div class="field">
+              <label for="minutes">Minutes</label>
+              <input
+                type="number"
+                id="minutes"
+                name="minutes"
+                min="0"
+                max="59"
+                value="1"
+              />
+            </div>
+            <div class="field">
+              <label for="seconds">Seconds</label>
+              <input
+                type="number"
+                id="seconds"
+                name="seconds"
+                min="0"
+                max="59"
+                value="30"
+              />
+            </div>
+          </form>
+
+          <div class="timer-actions">
+            <button type="button" id="start-btn" class="btn btn-primary">Start</button>
+            <button type="button" id="pause-btn" class="btn" disabled>Pause</button>
+            <button type="button" id="reset-btn" class="btn btn-danger">Reset</button>
+          </div>
+
+          <p id="timer-error" class="error" hidden></p>
+
+          <div id="completion-card" class="completion-card" hidden>
+            <p class="completion-label">Time's up!</p>
+            <blockquote id="completion-quote"></blockquote>
+            <cite id="completion-author"></cite>
+          </div>
+        </section>
+
+        <aside class="side-column">
+          <section class="panel" aria-label="Async activity log">
+            <div class="panel-title-row">
+              <h2 class="panel-title">Async activity log</h2>
+              <span class="live-dot" aria-hidden="true"></span>
+            </div>
+            <p class="panel-hint">
+              Watch synchronous code, callbacks, microtasks, and timers interleave.
+            </p>
+            <ol id="activity-log" class="activity-log"></ol>
+            <button type="button" id="clear-log-btn" class="btn btn-ghost">Clear log</button>
+          </section>
+
+          <section class="panel" aria-label="Concept demos">
+            <h2 class="panel-title">Quick demos</h2>
+            <div class="demo-buttons">
+              <button type="button" class="btn demo-btn" data-demo="event-loop">
+                Event loop order
+              </button>
+              <button type="button" class="btn demo-btn" data-demo="callbacks">
+                Callbacks
+              </button>
+              <button type="button" class="btn demo-btn" data-demo="promises">
+                Promise chain
+              </button>
+              <button type="button" class="btn demo-btn" data-demo="callback-hell">
+                Callback hell
+              </button>
+            </div>
+          </section>
+
+          <section class="panel concepts-panel" aria-label="Topics covered">
+            <h2 class="panel-title">Topics in this project</h2>
+            <ul class="concept-list">
+              <li><strong>Sync vs async</strong> — logs run immediately; timers &amp; fetch run later</li>
+              <li><strong>Event loop</strong> — call stack empties, then microtasks, then macrotasks</li>
+              <li><strong>Callbacks</strong> — <code>validateDuration</code> uses a callback pattern</li>
+              <li><strong>Promises</strong> — <code>delay()</code>, pending → fulfilled / rejected</li>
+              <li><strong>Chaining</strong> — <code>prepareCountdown()</code> chains <code>.then()</code></li>
+              <li><strong>async / await</strong> — main countdown loop waits with <code>await</code></li>
+              <li><strong>try / catch</strong> — errors from validation &amp; fetch are caught</li>
+              <li><strong>fetch</strong> — loads a quote when the timer finishes</li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
