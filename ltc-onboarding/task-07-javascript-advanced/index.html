@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini Wallet - Advanced JavaScript</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app task-wallet">
+    <main class="container">
+      <header class="page-header">
+        <p class="eyebrow">Task 07 · Advanced JavaScript</p>
+        <h1>Mini Wallet</h1>
+        <p class="subtitle">
+          Deposit, withdraw, and track balance - closures, prototypes, and functional patterns in one small app
+        </p>
+      </header>
+
+      <div class="layout">
+        <section class="panel wallet-panel" aria-label="Wallet">
+          <p class="account-label" id="account-label"></p>
+          <p class="balance" id="balance" aria-live="polite">$0.00</p>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="holder-name">Holder</label>
+              <input type="text" id="holder-name" value="Vishwas" />
+            </div>
+            <div class="field">
+              <label for="account-type">Account type</label>
+              <select id="account-type">
+                <option value="standard">Standard</option>
+                <option value="savings">Savings</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" />
+          </div>
+
+          <p class="error" id="error" hidden></p>
+
+          <div class="actions">
+            <button type="button" class="btn btn--primary" id="deposit-btn">Deposit</button>
+            <button type="button" class="btn" id="withdraw-btn">Withdraw</button>
+          </div>
+
+          <div class="summary">
+            <div>
+              <span class="summary__label">Total deposited</span>
+              <span class="summary__value" id="summary-deposits">$0.00</span>
+            </div>
+            <div>
+              <span class="summary__label">Total withdrawn</span>
+              <span class="summary__value" id="summary-withdrawals">$0.00</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel history-panel" aria-label="Transaction history">
+          <h2 class="panel-title">History</h2>
+          <ul class="tx-list" id="transaction-list"></ul>
+        </section>
+      </div>
+
+      <p class="hint">
+        Run with Live Server or <code>npx serve .</code> - ES modules need <code>http://</code>.
+      </p>
+    </main>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
