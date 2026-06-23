@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Tracker </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="app task-webhooks">
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="container">
+      <header class="page-header">
+        <p class="eyebrow">Task 08 · Webhooks</p>
+        <h1>Order Tracker</h1>
+        <p class="subtitle">
+          Webhook-driven e-commerce dashboard · REST pull vs event push
+        </p>
+      </header>
+
+      <section class="summary" aria-label="Summary">
+        <div class="summary-card summary-card--total">
+          <span class="summary-icon" aria-hidden="true">#</span>
+          <span class="label">Orders</span>
+          <span id="stat-orders" class="value">0</span>
+        </div>
+        <div class="summary-card summary-card--pending">
+          <span class="summary-icon" aria-hidden="true">○</span>
+          <span class="label">Pending</span>
+          <span id="stat-pending" class="value">0</span>
+        </div>
+        <div class="summary-card summary-card--events">
+          <span class="summary-icon" aria-hidden="true">↯</span>
+          <span class="label">Events</span>
+          <span id="stat-events" class="value">0</span>
+        </div>
+      </section>
+
+      <section class="panel terminal-panel" aria-label="Connection status">
+        <div class="panel-title-row">
+          <h2 class="panel-title">Live stream</h2>
+          <span id="live-badge" class="live-badge live-badge--on">
+            <span class="live-dot" aria-hidden="true"></span>
+            Connected
+          </span>
+        </div>
+        <p class="panel-hint">
+          Dashboard updates via <code>SSE</code> when webhooks arrive at
+          <code>POST /webhooks/orders</code>. Run
+          <code>npm run simulate -- order.created</code> in a second terminal.
+        </p>
+      </section>
+
+      <div class="layout">
+        <section class="panel" aria-label="Orders">
+          <div class="list-header">
+            <h2 class="panel-title">Orders</h2>
+            <span id="orders-badge" class="badge">0 total</span>
+          </div>
+          <div id="orders-list" class="item-list"></div>
+        </section>
+
+        <section class="panel" aria-label="Webhook events">
+          <div class="list-header">
+            <h2 class="panel-title">Webhook events</h2>
+            <span id="events-badge" class="badge">0 received</span>
+          </div>
+          <div id="events-list" class="item-list event-list"></div>
+        </section>
+      </div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
